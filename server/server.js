@@ -4,8 +4,7 @@ const fs = require('fs')
 const db = require('./db/tasks.json')
 
 const app = express()
-//Port
-app.set('port', 3000)
+const port = process.env.PORT || 3000
 app.use(express.json())
 app.use(cors())
 
@@ -60,5 +59,5 @@ app.put('/tasks/:id', (req, res) => {
 })
 
 
-app.listen(app.get('port'))
+app.listen(port)
 console.log(`server on port: ${app.get('port')}`)
