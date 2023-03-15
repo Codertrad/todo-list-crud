@@ -9,7 +9,7 @@ const DetailOfTask = () => {
 	const [modifyTask, setModifyTask] = useState(false)
 	const tasks = useGetTask()
 	const { idTask } = useParams()
-	const filter = tasks.find((task) => task.id === parseInt(idTask))
+	const filter = tasks.find(task => task._id === idTask)
 
 	const taskDel = () => {
 		useDeleteTask({ idTask })

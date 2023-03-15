@@ -9,7 +9,7 @@ const useCreateTask = (e) => {
 		description: description,
 	}
 
-	axios.post('https://todo-list-crud.vercel.app/', task)
+	axios.post('http://localhost:3000/tasks', task)
 	setTimeout(() => {
 		window.location.href = window.location.href
 		window.location.replace('/')

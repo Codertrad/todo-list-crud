@@ -1,63 +1,64 @@
 const express = require('express')
 const cors = require('cors')
 const fs = require('fs')
-const db = require('./db/tasks.json')
+// Database Mongo
+const { dbConnect } = require('./db/db')
+const { Task } = require('./models/Task')
 
 const app = express()
 const port = process.env.PORT || 3000
 app.use(express.json())
 app.use(cors())
 
+dbConnect()
+
 // Endpoint para obtener todas las tareas
-app.get('/tasks', (req, res) => {
-  res.send(db)
+ app.get('/tasks', async (req, res) => {
+  const tasks = await Task.find()
+  res.status(200).json(tasks)
 })
 
 // Enpoint para crear nueva tarea
-app.post('/tasks', (req, res) => {
-  db.push({ id: db.length + 1, ...req.body })
-  fs.writeFile('./db/tasks.json', JSON.stringify(db), err => {
-    if (err) throw err
-  })
-  res.send('Nueva tarea creada')
+app.post('/tasks', async (req, res) => {
+  const newTask = new Task(req.body)
+  const savedTask = await newTask.save()
+  res.status(201).json(savedTask)
 })
 
 // Enpoint para eliminar una tarea
-app.delete('/tasks/:id', (req, res) => {
-  const params = parseInt(req.params.id)
-  const taskFilter = db.filter(task => task.id !== params)
-
-  fs.writeFile('./db/tasks.json', JSON.stringify(taskFilter), err => {
-    if (err) throw err
-  })
-
-  res.send('Tarea Eliminada correctamente')
+app.delete('/tasks/:id', async (req, res) => {
+  try {
+    const params = req.params.id
+    const deleteTask = await Task.findByIdAndDelete(params)
+      if(!deleteTask) return res.status(404).json({msg : "Task not found"})
+    
+      return res.status(204).json({msg: "Tarea eliminada Correctamente"})
+  } catch (error) {
+    
+    return res.status(400).json({msg: error.message})
+  }
 })
 
 // Endpoint para modificar una tarea
 
-app.put('/tasks/:id', (req, res) => {
-  const newData = req.body
-  const params = parseInt(req.params.id)
-  const findTask = db.find((task) => task.id === params)
+app.put('/tasks/:id', async (req, res) => {
+  try {
+    const newData = req.body
+    const params = req.params.id
+    
+    const updateTask = await Task.findByIdAndUpdate(params, newData)
+    if (!updateTask) return res.status(404).json({msg : "Task not found"})
+  
+    return res.status(204).json({msg: 'Tarea actualizada correctamente'})
+    
+  } catch (error) {
+    
+    return res.status(400).json({msg: error.message})
 
-  if (!findTask) {
-    res.status(404).json({
-      message: 'Product not found'
-    })
   }
 
-  const newdb = db.map(task => task.id === params
-    ? { ...task, ...newData }
-    : task)
-
-    fs.writeFile('./db/tasks.json', JSON.stringify(newdb), err => {
-      if (err) throw err
-    })
-
-  res.send('Tarea Modificada correctamente')
 })
 
 
 app.listen(port)
-console.log(`server on port: ${app.get('port')}`)
+console.log(`server on port: ${port}`)

@@ -12,9 +12,9 @@ const ListOfTasks = ({ handlerCreateTask }) => {
 			<ListTask>
 				<h1>TAREAS</h1>
 				<div className='listOfTasks'>
-					{tasks.map(({ id, title, description } = tasks) => {
+					{tasks.map(({ _id, title, description } = tasks) => {
 						return (
-							<Task key={id} title={title} description={description} id={id} />
+							<Task key={_id} title={title} description={description} id={_id} />
 						)
 					})}
 				</div>
