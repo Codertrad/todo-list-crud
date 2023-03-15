@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const useDeleteTask = ({idTask}) =>{
-  axios.delete(`http://localhost:3000/tasks/${idTask}`)
+  axios.delete(`https://todo-list-crud.vercel.app/tasks/${idTask}`)
   setTimeout(() => {
     window.location.href = window.location.href
     window.location.replace('/')

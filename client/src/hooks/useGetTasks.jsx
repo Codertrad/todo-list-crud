@@ -5,7 +5,7 @@ const useGetTask = () => {
   const [tasks, setTasks] = useState([])
   useEffect(() => {
     const getTasks = async () => {
-      const get = await axios.get('http://localhost:3000/tasks')
+      const get = await axios.get('https://todo-list-crud.vercel.app/tasks')
       const data = get.data
       setTasks(data)
     }

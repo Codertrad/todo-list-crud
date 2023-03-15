@@ -17,7 +17,7 @@ const ModifyTask = ({ handlerModifyTask }) => {
 		console.log(task)
 		console.log(idTask)
 
-		axios.put(`http://localhost:3000/tasks/${idTask}`, task)
+		axios.put(`https://todo-list-crud.vercel.app/tasks/${idTask}`, task)
 		setTimeout(() => {
 			window.location.href = window.location.href
 			window.location.replace(`/${idTask}`)
